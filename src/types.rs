@@ -27,6 +27,7 @@ pub enum SliderEventType {
     Decay,
     Sustain,
     Release,
+    DelayGain,
 }
 
 #[allow(dead_code)]

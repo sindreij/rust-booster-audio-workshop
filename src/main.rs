@@ -8,6 +8,7 @@ mod event_loop;
 mod types;
 mod ui;
 
+use std::collections::VecDeque;
 use std::sync::mpsc::channel;
 
 use types::{Slider, SliderEvent, SliderEventType};
@@ -90,6 +91,9 @@ fn main() -> Result<(), Error> {
     let mut buffer = Vec::new();
     let mut last_val = 0.;
 
+    let mut delay: VecDeque<f64> = vec![0.0; (0.5 * sample_rate) as usize].into();
+    let mut delay_gain = 0.5;
+
     let mut notes = Vec::new();
     for i in 0..15 {
         notes.push(Note {
@@ -124,6 +128,9 @@ fn main() -> Result<(), Error> {
                         note.adsr.sustain = value;
                     }
                 }
+                SliderEventType::DelayGain => {
+                    delay_gain = value;
+                }
             }
         }
 
@@ -151,6 +158,8 @@ fn main() -> Result<(), Error> {
             val += res;
         }
 
+        val += delay.pop_front().unwrap_or(0.0) * delay_gain;
+
         // if let Some(action) = action.first() {
         //     gate = 1.0;
         //     if *action != current_key {
@@ -171,6 +180,7 @@ fn main() -> Result<(), Error> {
         // let val = ;
         // # sin
 
+        delay.push_back(val);
         buffer.push(val);
         last_val = val;
 
@@ -207,6 +217,13 @@ fn main() -> Result<(), Error> {
             default: 10000.,
             event_type: SliderEventType::Release,
             label: "Release".to_string(),
+        },
+        Slider {
+            min: 0.,
+            max: 1.,
+            default: 0.5,
+            event_type: SliderEventType::DelayGain,
+            label: "Delay".to_string(),
         },
     ];
 
