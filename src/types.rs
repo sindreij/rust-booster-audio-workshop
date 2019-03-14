@@ -1,4 +1,3 @@
-
 #[allow(dead_code)]
 pub struct Slider {
     pub min: f64,
@@ -21,7 +20,7 @@ impl Slider {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 #[allow(dead_code)]
 pub enum SliderEventType {
     Attack,

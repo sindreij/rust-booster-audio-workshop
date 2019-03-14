@@ -1,7 +1,7 @@
 pub type Phase = f64;
 pub type Signal = f64;
 
-pub type SignalProcessorFunction = Box<FnMut(Option<i32>) -> Signal + Send>;
+pub type SignalProcessorFunction = Box<FnMut(&[i32]) -> Signal + Send>;
 
 #[derive(Clone, Copy)]
 pub enum KeyAction {

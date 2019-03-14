@@ -3,26 +3,24 @@ use std::collections::VecDeque;
 use types::KeyAction;
 
 pub struct KeysState {
-    state: VecDeque<i32>,
+    state: Vec<i32>,
 }
 
 impl KeysState {
     pub fn new() -> Self {
-        Self {
-            state: VecDeque::new(),
-        }
+        Self { state: Vec::new() }
     }
 
-    pub fn key_down(&mut self, key_action: KeyAction) -> Option<i32> {
+    pub fn key_down(&mut self, key_action: KeyAction) -> Vec<i32> {
         match key_action {
             KeyAction::Press(value) => {
                 self.remove_key(value);
-                self.state.push_front(value);
-                self.state.front().cloned()
+                self.state.push(value);
+                self.state.clone()
             }
             KeyAction::Release(value) => {
                 self.remove_key(value);
-                self.state.front().cloned()
+                self.state.clone()
             }
         }
     }
